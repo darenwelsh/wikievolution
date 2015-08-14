@@ -1,5 +1,9 @@
 <?php
-
+// based on http://dltj.org/article/emanuel-african-methodist-episcopal-church-wikipedia-page-visualized/
+// 
+// Take source html from a MediaWiki wiki history page
+// Generate animated gif of the evolution of that page over time
+//
 
 $file = file_get_contents('./test.txt', FILE_USE_INCLUDE_PATH);
 // $file = file_get_contents('https://en.wikipedia.org/w/index.php?title=Emanuel_African_Methodist_Episcopal_Church&action=history');
