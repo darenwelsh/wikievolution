@@ -1,7 +1,7 @@
 <?php
 
 
-$file = file_get_contents('./output.txt', FILE_USE_INCLUDE_PATH);
+$file = file_get_contents('./test.txt', FILE_USE_INCLUDE_PATH);
 // $file = file_get_contents('https://en.wikipedia.org/w/index.php?title=Emanuel_African_Methodist_Episcopal_Church&action=history');
 // $file = file_get_contents('https://mod2.jsc.nasa.gov/wiki/EVA/index.php?title=Hard_Upper_Torso&action=history');
 
@@ -9,7 +9,13 @@ $file = file_get_contents('./output.txt', FILE_USE_INCLUDE_PATH);
 /* 
 $pattern = '!^.*<a href="([^" ]*?)" title="([^"]*?)" class="mw-changeslist-date">(\d\d):(\d\d), (\d\d) (.[^ ]*) (\d\d\d\d)</a>‎ <span class=\'history-user\'><a href="([^" ]*?)"[^="">]*?.*?>(.*?)</a>.*(<span class="comment">(.*)</span>)?.*</span>.*!'; 
 */
-$pattern = '!^.*<a href="([^&]*?)&([^" ]*?)" title="([^"]*?)" class="mw-changeslist-date">(\d\d.\d\d), (\d\d) (.[^ ]*) (\d\d\d\d)</a>‎ <span class=\'history-user\'><a href="([^" ]*?)"[^="">]*?.*?>(.*?)</a>.*(<span class="comment">(.*)</span>)?.*</span>.*!';
+// cut URL to isolate &
+/*
+$pattern = '^!.*<a href="([^&]*?)&([^" ]*?)" title="([^"]*?)" class="mw-changeslist-date">(\d\d.\d\d), (\d\d) (.[^ ]*) (\d\d\d\d)</a>‎ <span class=\'history-user\'><a href="([^" ]*?)"[^="">]*?.*?>(.*?)</a>.*(<span class="comment">(.*)</span>)?.*</span>.*!';
+*/
+// remove ^
+$pattern = '!.*<a href="([^&]*?)&([^" ]*?)" title="([^"]*?)" class="mw-changeslist-date">(\d\d.\d\d), (\d\d) (.[^ ]*) (\d\d\d\d)</a>‎ <span class=\'history-user\'><a href="([^" ]*?)"[^="">]*?.*?>(.*?)</a>.*(<span class="comment">(.*)</span>)?.*</span>.*!';
+
 // 01 page URL part 1
 // add & beteen part 1 and part 2
 // 02 page URL part 2
@@ -37,12 +43,14 @@ preg_match_all($pattern, $file, $matches, PREG_SET_ORDER);
 
 $matcheslist = ""; //init
 foreach ($matches as $val) {
+	// echo(preg_replace($pattern, $replacementtimestampandurl, $val[0]));
 	$matcheslist .= $val[0] . "\n";
 	$pagehistoryline = $val[0];
 	$timestampandurl = preg_replace($pattern, $replacementtimestampandurl, $pagehistoryline);
-	$command = "webkit2png -W 1400 -H 3800 -F -o raw/$timestampandurl";
-	// exec(escapeshellcmd($command));
-	echo($timestampandurl);
+	$timestampandurl2 = preg_replace('!(\d\d):(\d\d)!', '$1$2', $timestampandurl);
+	$command = "webkit2png -W 1400 -H 3800 -F -o raw/$timestampandurl2";
+	exec(escapeshellcmd($command));
+	// echo($timestampandurl2 . "\n");
 	sleep(5);
 }
 // End
