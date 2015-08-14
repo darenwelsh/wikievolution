@@ -91,4 +91,24 @@ file_put_contents($outputfile, $pagehistory);
 
 
 
+// notes from http://dltj.org/article/emanuel-african-methodist-episcopal-church-wikipedia-page-visualized/
+// Then I used the webkit2png program to grab the full page captures of each version of the wiki page:
 
+// cat page-history.txt | \
+//  while read line; do \
+//    IFS=$'\t' read url timestamp editorurl editor &lt; &lt;&lt;"$line"; \
+//    webkit2png -W 1400 -H 3800 -F -o raw/$timestamp $url; \
+//    sleep 5; \
+//  done
+// With the full page captures in place, I resized and annotated the top of each with the timestamp and the wiki editor’s name using Imagemagick convert:
+
+// cat page-history.txt | \
+//  while read line; do \
+//    IFS=$'\t' read url timestamp editorurl editor &lt; &lt;&lt;"$line"; \
+//    convert raw/$timestamp-full.png -resize 25% -background '#0008' -splice 0x20 \
+//    -pointsize 15 -fill white -annotate +10+16 "$timestamp  $editor" \
+//    labeled/$timestamp-labeled.png; \
+//  done
+// Finally, I also used Imagemagick to create the animated GIF:
+
+// convert -delay 50 -loop 0 labeled/*.png animation.gif

@@ -12,7 +12,6 @@ fi
 
 # Get webkit2png
 echo "Downloading and installing webkit2png"
-cd ~
 wget https://raw.github.com/paulhammond/webkit2png/master/webkit2png
 mv ./webkit2png /usr/local/bin/webkit2png
 chmod a+x /usr/local/bin/webkit2png
